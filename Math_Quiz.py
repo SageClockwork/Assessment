@@ -24,7 +24,7 @@ def instructions():
           
 Welcome to the Math Quiz!
 
-Start by choosing a difficulty (easy, medium, hard), which 
+Start by choosing a difficulty (easy, hard, or mixed), which 
 will make questions depending on the difficulty you chose.
 
 Next, you are going to choose the amount of questions or 

@@ -4,10 +4,10 @@ import random
 
 symbol_list = ["+", "-", "/", "*" ]
 
-symbols = random.choices(+, - )
+random_symbol = random.choice(symbol_list)
 
-print(f"{random.randint(0, 100)} {symbols} {random.randint(0, 100)}"
-      f"Answer:")
+print(f"{random.randint(0, 100)} {random_symbol} {random.randint(0, 100)}")
+print("Answer:")
 
 
 
