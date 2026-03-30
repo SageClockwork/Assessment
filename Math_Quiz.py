@@ -1,5 +1,6 @@
 import random
 
+
 def yes_no(question):
 
     """Checks user responses to a question is yes / no (y/n), returns 'yes' or 'no' """
@@ -29,7 +30,7 @@ will make questions depending on the difficulty you chose.
 
 Next, you are going to choose the amount of questions or 
 rounds you want to play. Then, you will get a series of math 
-questions to anser.
+questions to answer. The answers will always be rounded up.
           
  Good Luck.
           
@@ -37,7 +38,7 @@ questions to anser.
 
 def int_check(question, low=None, high=None, exit_code=None, infinite=""): 
     
-    # Checks if the user chooses a valind amount of rounds / questions.
+    # Checks if the user chooses a valid amount of rounds / questions.
     while True:
         response = input(question).lower()
 
@@ -68,27 +69,111 @@ def int_check(question, low=None, high=None, exit_code=None, infinite=""):
         except ValueError:
             print(error)
 
+def answer_checker(question):
+    # Checks if the user input is an integer.
+    while True:
+        response = input(question)
+        try:
+            integer = int(response)
+            return integer
+        except ValueError:
+            print("Please enter an integer")
 
-#Main routine...
+
+def difficulty(question):
+    """Checks if the user response to the question is hard / easy / mixed and returns their choice """
+
+    while True:
+
+        response = input(question).lower()
+
+        # checks what difficulty the user asks for
+        if response == "hard" or response == "h":
+            return "hard"
+        elif response == "easy" or response == "e":
+            return "easy"
+        elif response == "mixed" or response == "m":
+            return "mixed"
+        else:
+            print("please enter e(easy) / h(hard) / m(mixed)")
+
+
+# Variables
+symbol_list = []
+rounds_played = 0
+
+
+
+# Main routine...
 # Display game name
 print()
 print("🔢 🔢 🔢 Welcome to the Math Quiz 🔢 🔢 🔢")
 print()
 
-# ask the user if they want instrunctions (check they say yes / no)
-
+# ask the user if they want instructions (check they say yes / no)
+print()
 want_instructions = yes_no("Do you want to see the instructions? ")
 
 # Display the instructions if the user wants to see them...
 if want_instructions == "yes":
     instructions()
 
-
 # Asks user how many rounds they want.
-
+print()
 rounds = int_check("How many questions would you like (<enter> for infinite)?: ", low=1, exit_code="xxx", infinite="")
-    
-            
+
+# Checks if infinite mode is chosen.
+if rounds == "":
+    mode = "infinite"
+    rounds = 5
+
+# Asks the user what difficulty they want.
+print()
+want_difficulty = difficulty("What difficulty do you want? ")
+
+# Sets the symbols that will be used depending on user choice.
+if want_difficulty == "easy":
+    symbol_list = "+", "-"
+elif want_difficulty == "hard":
+    symbol_list = "*", "/"
+else:
+    symbol_list = "*", "/", "+", "-"
+
+# Round loop starts here
+while rounds > rounds_played:
+    # Chooses a random symbol from the list and generates 2 random numbers.
+    random_symbol = random.choice(symbol_list)
+    num1 = random.randint(1, 100)
+    num2 = random.randint(1, 100)
+
+    # Finds the answer to the generated question
+    if random_symbol == "+":
+        answer = (num1 + num2)
+    elif random_symbol == "-":
+        answer = (num1 - num2)
+    elif random_symbol == "*":
+        answer = (num1 * num2)
+    elif random_symbol == "/":
+        answer = (num1 / num2)
+
+    # Uses the random numbers and symbol to generate question
+    print(answer)
+    response = answer_checker(f"{num1} {random_symbol} {num2} = ")
 
 
+    # Rounds the answer and the user input up to the nearest full integer
+    response = round(response, 2)
+    answer = round(answer, 2)
 
+
+    # Tells the user if their answer is wrong and regenerates the same question and rounds the response again.
+    while response != answer:
+        print("wrong answer")
+        response = answer_checker(f"{num1} {random_symbol} {num2} = ")
+        response = round(response, 2)
+
+    # Tells user that their answer is correct.
+    print(f"Correct!")
+    rounds_played += 1
+
+# Round loop ends here
