@@ -141,6 +141,13 @@ else:
 
 # Round loop starts here
 while rounds > rounds_played:
+    # Round heading
+    if mode == "infinite":
+        print(f"=== Round {rounds_played+1} (infinite mode) ===")
+
+    else:
+        print(f"=== Round {rounds_played+1} ===")
+
     # Chooses a random symbol from the list and generates 2 random numbers.
     random_symbol = random.choice(symbol_list)
     num1 = random.randint(1, 100)
@@ -157,9 +164,9 @@ while rounds > rounds_played:
         answer = (num1 / num2)
 
     # Uses the random numbers and symbol to generate question
+    print()
     print(answer)
     response = answer_checker(f"{num1} {random_symbol} {num2} = ")
-
 
     # Rounds the answer and the user input up to the nearest full integer
     response = round(response, 2)
@@ -169,11 +176,16 @@ while rounds > rounds_played:
     # Tells the user if their answer is wrong and regenerates the same question and rounds the response again.
     while response != answer:
         print("wrong answer")
+        print(answer)
         response = answer_checker(f"{num1} {random_symbol} {num2} = ")
         response = round(response, 2)
 
     # Tells user that their answer is correct.
     print(f"Correct!")
     rounds_played += 1
+
+    # Adds another round each time if mode is infinite.
+    if mode == "infinite":
+        rounds += 1
 
 # Round loop ends here
