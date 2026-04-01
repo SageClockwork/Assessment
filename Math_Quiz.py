@@ -101,7 +101,9 @@ def difficulty(question):
 # Variables
 symbol_list = []
 rounds_played = 0
-
+mode = "regular"
+statistics = []
+game_history = []
 
 
 # Main routine...
@@ -169,8 +171,8 @@ while rounds > rounds_played:
     response = answer_checker(f"{num1} {random_symbol} {num2} = ")
 
     # Rounds the answer and the user input up to the nearest full integer
-    response = round(response, 2)
-    answer = round(answer, 2)
+    response = round(response, 0)
+    answer = round(answer, 0)
 
 
     # Tells the user if their answer is wrong and regenerates the same question and rounds the response again.
