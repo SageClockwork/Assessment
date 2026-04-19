@@ -1,5 +1,4 @@
 import random 
-import math
 #functions go here
 
 def answer_checker(question):

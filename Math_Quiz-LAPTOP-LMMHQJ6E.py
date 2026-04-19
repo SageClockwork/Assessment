@@ -18,27 +18,23 @@ def yes_no(question):
             print("please enter yes / no")
 
 def instructions():
-    
     """Prints instructions"""
 
     print("""
                  *** Instructions ***
           
-Welcome to the Math Quiz!
+    Welcome to the Math Quiz!
 
-Start by choosing a difficulty (easy, hard, or mixed), which 
-will make questions depending on the difficulty you chose.
-Each difficulty will give you a different amount of trys 
-before you lose the round, easy will give 
+    Start by choosing a difficulty (easy, hard, or mixed), which 
+    will make questions depending on the difficulty you chose.
 
-Next, you are going to choose the amount of questions or 
-rounds you want to play. Then, you will get a series of math 
-questions to answer. The answers will be rounded to the 
-closest integer.
-          
- Good Luck.
-          
-    """)
+    Next, you are going to choose the amount of questions or 
+    rounds you want to play. Then, you will get a series of math 
+    questions to answer. The answers will always be rounded up.
+            
+    Good Luck.
+            
+        """)
 
 def int_check(question, low=None, high=None, exit_code=None, infinite=""): 
     
@@ -104,11 +100,8 @@ def difficulty(question):
 
 # Variables
 symbol_list = []
-rounds_played = 0
-mode = "regular"
-statistics = []
-game_history = []
-trys = 0
+
+
 
 # Main routine...
 # Display game name
@@ -147,17 +140,13 @@ else:
 
 # Round loop starts here
 while rounds > rounds_played:
-    # Round heading
-    if mode == "infinite":
-        print(f"=== Round {rounds_played+1} (infinite mode) ===")
-
-    else:
-        print(f"=== Round {rounds_played+1} ===")
-
     # Chooses a random symbol from the list and generates 2 random numbers.
     random_symbol = random.choice(symbol_list)
-    num1 = random.randint(-100, 100)
-    num2 = random.randint(-100, 100)
+    num1 = random.randint(1, 100)
+    num2 = random.randint(1, 100)
+
+    # Uses the random numbers and symbol to generate question
+    response = answer_checker(f"{num1} {random_symbol} {num2} = ")
 
     # Finds the answer to the generated question
     if random_symbol == "+":
@@ -169,28 +158,22 @@ while rounds > rounds_played:
     elif random_symbol == "/":
         answer = (num1 / num2)
 
-    # Uses the random numbers and symbol to generate question
-    print()
-    print(answer)
-    response = answer_checker(f"{num1} {random_symbol} {num2} = ")
-
     # Rounds the answer and the user input up to the nearest full integer
-    response = round(response, 0)
+    response = round(response, 2)
     answer = round(answer, 2)
 
 
     # Tells the user if their answer is wrong and regenerates the same question and rounds the response again.
     while response != answer:
         print("wrong answer")
-        print(answer)
         response = answer_checker(f"{num1} {random_symbol} {num2} = ")
-        response = round(response, 0)
+        response = round(response, 2)
 
     # Tells user that their answer is correct.
     print(f"Correct!")
+
     rounds_played += 1
 
-    # Adds another round each time if mode is infinite.
     if mode == "infinite":
         rounds += 1
 
