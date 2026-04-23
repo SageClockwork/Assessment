@@ -13,7 +13,7 @@ def answer_checker(question):
 
 # Variables
 symbol_list = ["+", "-", "/", "*" ]
-random_symbol = random.choice(symbol_list)
+random_symbol = random.randint(symbol_list)
 num1 = random.randint(1, 100)
 num2 = random.randint(1, 100)
 
