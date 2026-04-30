@@ -26,16 +26,11 @@ def instructions():
           
 Welcome to the Math Quiz!
 
-Start by choosing a difficulty (easy, hard, or mixed), which 
-will make questions depending on the difficulty you chose.
-Each difficulty will give you a different amount of attempts 
-before you lose the round. Easy difficulty will give 4
-attempts, mixed difficulty will give 3 attempts and hard 
-difficulty will give 2 attempts. 
- 
+Start by choosing the amount of questions / rounds you
+want to answer ({enter} for infinite mode).
 
-Next, you are going to choose the amount of questions or 
-rounds you want to play. Then, you will get a series of math 
+Next, you are going to choose the difficulty that you 
+want to play at. Then, you will get a series of math 
 questions to answer. The answers will be rounded to the 
 closest integer.
           
@@ -43,15 +38,14 @@ closest integer.
           
     """)
 
-def int_check(question, exit_code=None, infinite=""): 
+def int_check(question, infinite=""): 
     
     # Checks if the user chooses a valid amount of rounds / questions.
     while True:
         response = input(question).lower()
 
-        if response == exit_code:
-            return response
-        elif response == infinite:
+
+        if response == infinite:
             return response
         
         if response<"1":
@@ -72,10 +66,16 @@ def int_check(question, exit_code=None, infinite=""):
         except ValueError:
             print(error)
 
-def answer_checker(question):
+def answer_checker(question, exit_code=None ):
+        
+        
     # Checks if the user input is an integer.
     while True:
-        response = input(question)
+        response = input(question).lower()
+
+        if response == exit_code:
+            return response
+        
         try:
             integer = int(response)
             return integer
@@ -104,9 +104,11 @@ def difficulty(question):
 symbol_list = []
 rounds_played = 0
 mode = "regular"
-statistics = []
+statistics = ""
 game_history = []
-attempts = 0
+correct_answer = 0
+incorrect_answer = 0
+end_game= "no"
 
 # Main routine...
 # Display game name
@@ -124,7 +126,7 @@ if want_instructions == "yes":
 
 # Asks user how many rounds they want.
 print()
-rounds = int_check("How many questions would you like (<enter> for infinite)?: ", exit_code="xxx", infinite="")
+rounds = int_check("How many questions would you like (<enter> for infinite)?: ", infinite="")
 
 # Checks if infinite mode is chosen.
 if rounds == "":
@@ -137,26 +139,18 @@ want_difficulty = difficulty("What difficulty do you want? ")
 
 # Sets the symbols and attempts that will be used depending on user choice.
 if want_difficulty == "easy":
-    attempts_per_round = 3
     symbol_list = "+", "-"
 elif want_difficulty == "hard":
-    attempts_per_round = 1
     symbol_list = "*", "/"
 else:
-    attempts_per_round = 2
     symbol_list = "*", "/", "+", "-"
 
 # Round loop starts here
-while rounds > rounds_played:
-
-    # Resets the attepts at the start of each round
-    attempts = 0
-    attempts_left = attempts_per_round
+while rounds > rounds_played and end_game == "no":
 
     # Round heading
     if mode == "infinite":
         print(f"=== Round {rounds_played+1} (infinite mode) ===")
-
     else:
         print(f"=== Round {rounds_played+1} ===")
 
@@ -164,6 +158,7 @@ while rounds > rounds_played:
     random_symbol = random.choice(symbol_list)
     num1 = random.randint(-100, 100)
     num2 = random.randint(-100, 100)
+    
 
     # Finds the answer to the generated question
     if random_symbol == "+":
@@ -181,36 +176,31 @@ while rounds > rounds_played:
     # Uses the random numbers and symbol to generate question
     print()
     print(answer)
-    print(attempts_left)
-    response = answer_checker(f"{num1} {random_symbol} {num2} = ")
+    response = answer_checker(f"{num1} {random_symbol} {num2} = ", exit_code="xxx")
+
+    # Checks if exit code is enters and ends game
+    if response == "xxx":
+        end_game= "yes"
+        break
     
     # Rounds the user input up to the nearest full integer
     response = round(response, 0)
 
+    # Gives the feedback of the round and saves the feedback
+    if response == answer:
+        feedback = "Correct!"
+        print(feedback)
+        correct_answer += 1
 
-
-
-    # Tells the user if their answer is wrong and regenerates the same question and rounds the response again. Also removes an attempt for every wrong answer
-    while response != answer and attempts < attempts_per_round:
-        # Removes an attempt from the total
-        attempts += 1
-        attempts_left -= 1
-        print(attempts_left)
-        if attempts_left >0:
-            print(f"wrong answer! You now have {attempts_left+1} attempts left")
-        else:
-            print("Wrong answer! Careful, You have 1 attempt left!")
-        print(answer)
-        response = answer_checker(f"{num1} {random_symbol} {num2} = ")
-        response = round(response, 0)
-
-    # Tells user that their answer is correct.
-    if attempts < attempts_per_round:
-        print(f"Correct! You got the answer with {attempts_left+1} attempts left")
-    
-    # Tells the user they ran out of attempts 
     else:
-        print(f"You ran out of attempts! The correct answer was {answer} ")
+        feedback = "Wrong!"
+        print("Wrong answer!")
+        incorrect_answer += 1
+
+    # Saves the question in game history and the user's answer
+    history_item = f"Round: {rounds_played+1} Q:{num1} {random_symbol} {num2} = {response} (correct answer = {answer}, feedback = {feedback})"
+    game_history.append(history_item)
+    print()
 
     # Adds another round each time if mode is infinite.
     if mode == "infinite":
@@ -219,4 +209,32 @@ while rounds > rounds_played:
     # Adds another round to the rounds played variable
     rounds_played += 1
 
+    
+
 # Round loop ends here
+    
+# makes the statistics
+statistics = f"""
+    ----Statistics----
+
+Questions answered: {rounds_played}
+Correct answers: {correct_answer}
+Wrong answers: {incorrect_answer}
+Correct answer rate: {round(correct_answer/rounds_played*100)}%
+
+""" 
+# prints the statistics
+print()
+print(statistics)
+
+# asks user if they want to see the game history
+want_history = yes_no("Do you want to see the game history? ")
+
+# prints the game history if response is yes
+if want_history == "yes":
+    print(f"\n{game_history}")
+
+print()    
+    
+
+
